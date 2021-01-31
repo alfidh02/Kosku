@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cnb_unselectedColor="#666666">
+
+    <item
+        android:id="@+id/home"
+        android:icon="@drawable/ic_home"
+        android:title="Beranda"
+        app:cnb_iconColor="@color/colorHome"/>
+
+    <item
+        android:id="@+id/money"
+        android:icon="@drawable/ic_book"
+        android:title="Biaya"
+        app:cnb_iconColor="@color/colorMoney"/>
+
+    <item
+        android:id="@+id/report"
+        android:icon="@drawable/ic_calendar"
+        android:title="Laporan"
+        app:cnb_iconColor="@color/colorReport"/>
+
+</menu>
