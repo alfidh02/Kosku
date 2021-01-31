@@ -7,14 +7,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.DatePicker
+import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import com.google.firebase.database.*
 import com.project.kosku.R
+import com.project.kosku.model.Tenant
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.layout_dialog.*
 import java.util.*
 
 class HomeFragment : Fragment(), DatePickerDialog.OnDateSetListener {
+    private lateinit var mFirebaseDatabase: DatabaseReference
+    private lateinit var mFirebaseInstance: FirebaseDatabase
+    lateinit var kName : String
+    lateinit var kNo : String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,12 +35,10 @@ class HomeFragment : Fragment(), DatePickerDialog.OnDateSetListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var locale = Locale("id", "ID")
+        mFirebaseInstance = FirebaseDatabase.getInstance()
+        mFirebaseDatabase = mFirebaseInstance.getReference("Tenant")
 
-        tvMonth.setText(
-            Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale)
-        )
-        tvYear.setText(Calendar.getInstance().get(Calendar.YEAR).toString())
+        setDate()
 
         fabAdd.setOnClickListener {
             dialogAdd()
@@ -40,9 +46,20 @@ class HomeFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
     }
 
+    private fun setDate() {
+        var locale = Locale("id", "ID")
+
+        tvMonth.setText(
+            Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale)
+        )
+        tvYear.setText(Calendar.getInstance().get(Calendar.YEAR).toString())
+    }
+
     private fun dialogAdd() {
         val view: View = layoutInflater.inflate(R.layout.layout_dialog, null)
         val pickDate : Button = view.findViewById(R.id.btnDate)
+        val etName : EditText = view.findViewById(R.id.etName)
+        val etNo : EditText = view.findViewById(R.id.etNo)
 
         val dialog = AlertDialog.Builder(context!!)
         dialog.apply {
@@ -51,7 +68,18 @@ class HomeFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                 dialogInterface.dismiss()
             }
             setPositiveButton("Tambah") { dialogInterface, i ->
+                kName = etName.text.toString()
+                kNo = etNo.text.toString()
 
+                if (kName.equals("")) {
+                    Toast.makeText(context, "Nama tidak boleh kosong!", Toast.LENGTH_SHORT).show()
+                    etName.requestFocus()
+                } else if (kNo.equals("")) {
+                    Toast.makeText(context, "Nomor HP masa tidak punya?!", Toast.LENGTH_SHORT).show()
+                    etNo.requestFocus()
+                } else {
+                    saveData(kName, kNo)
+                }
             }
         }
 
@@ -61,6 +89,26 @@ class HomeFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
         dialog.setView(view)
         dialog.show()
+    }
+
+    private fun saveData(kName: String, kNo: String) {
+
+        val tenant = Tenant()
+        tenant.name = kName
+        tenant.noHp = kNo
+
+        mFirebaseDatabase.child(kName).addValueEventListener(object : ValueEventListener {
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                mFirebaseDatabase.child(kName).setValue(tenant)
+                Toast.makeText(context, "Tambah data berhasil!", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(context, "${error.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+
     }
 
     private fun showDatePicker() {
