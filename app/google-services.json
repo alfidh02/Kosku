@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "683355710998",
+    "project_id": "kosku-c9faf",
+    "storage_bucket": "kosku-c9faf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:683355710998:android:fbe1b9271cf40caf993737",
+        "android_client_info": {
+          "package_name": "com.project.kosku"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "683355710998-1ndvpj5anr3004d3frp01h8tsfi6s7fd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.project.kosku",
+            "certificate_hash": "a7bac52d86a168ea9e5b3a6ef6512e00a05701bc"
+          }
+        },
+        {
+          "client_id": "683355710998-pi9m8cm5okdi9gfbsbr05b35f3bmvv1c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_6l4JTdGwHisa8VwnGPdLJwPHfqEIIO4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "683355710998-pi9m8cm5okdi9gfbsbr05b35f3bmvv1c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
