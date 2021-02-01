@@ -1,10 +1,15 @@
 package com.project.kosku.fragment
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.Toast
@@ -19,6 +24,8 @@ import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.layout_dialog.view.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
+
 
 class HomeFragment : Fragment(), DatePickerDialog.OnDateSetListener {
     private lateinit var mFirebaseDatabase: DatabaseReference
@@ -33,8 +40,16 @@ class HomeFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        val view: View = inflater.inflate(R.layout.fragment_home, container, false)
+
+        view.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                etSearch.clearFocus()
+                hideKeyboard()
+            }
+            true
+        }
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -43,18 +58,47 @@ class HomeFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         mFirebaseInstance = FirebaseDatabase.getInstance()
         mFirebaseDatabase = mFirebaseInstance.getReference("Tenant")
 
-        setDate()
+        etSearch.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                ivClear.visibility = View.VISIBLE
+                filter(s.toString())
+            }
 
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
+        ivClear.setOnClickListener {
+            etSearch.setText("")
+            ivClear.visibility = View.GONE
+        }
+
+        setDate()
         fabAdd.setOnClickListener {
             dialogAdd()
         }
-
         setupRecycler()
+    }
+
+    private fun filter(text: String) {
+        val temp = ArrayList<Tenant>()
+        for (d in dataList) {
+            if (d.name!!.toLowerCase().contains(text.toLowerCase())) {
+                temp.add(d)
+            }
+        }
+        (rvList.adapter as HomeAdapter).updateList(temp)
     }
 
     private fun setupRecycler() {
         rvList.layoutManager = LinearLayoutManager(context!!.applicationContext)
         loadData()
+    }
+
+    private fun hideKeyboard() {
+        val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(requireActivity().currentFocus?.windowToken, 0)
     }
 
 

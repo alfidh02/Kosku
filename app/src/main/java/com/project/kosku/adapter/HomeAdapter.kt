@@ -8,7 +8,7 @@ import com.project.kosku.R
 import com.project.kosku.model.Tenant
 import kotlinx.android.synthetic.main.row_user.view.*
 
-class HomeAdapter (private val tenants : ArrayList<Tenant>) : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
+class HomeAdapter (private var tenants : ArrayList<Tenant>) : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeViewHolder {
         return HomeViewHolder(
@@ -28,4 +28,8 @@ class HomeAdapter (private val tenants : ArrayList<Tenant>) : RecyclerView.Adapt
 
     class HomeViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
+    fun updateList(list : ArrayList<Tenant>) {
+        tenants = list
+        notifyDataSetChanged()
+    }
 }
