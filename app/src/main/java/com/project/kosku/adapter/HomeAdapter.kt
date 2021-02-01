@@ -23,6 +23,7 @@ class HomeAdapter (private val tenants : ArrayList<Tenant>) : RecyclerView.Adapt
 
         holder.itemView.tvName.text = tenant.name
         holder.itemView.tvNo.text = tenant.noHp
+        holder.itemView.tvDate.text = tenant.tgglMasuk
     }
 
     class HomeViewHolder(view: View) : RecyclerView.ViewHolder(view)

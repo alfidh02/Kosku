@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.DatePicker
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -17,6 +16,7 @@ import com.project.kosku.R
 import com.project.kosku.adapter.HomeAdapter
 import com.project.kosku.model.Tenant
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.layout_dialog.view.*
 import java.util.*
 
 class HomeFragment : Fragment(), DatePickerDialog.OnDateSetListener {
@@ -24,6 +24,7 @@ class HomeFragment : Fragment(), DatePickerDialog.OnDateSetListener {
     private lateinit var mFirebaseInstance: FirebaseDatabase
     lateinit var kName: String
     lateinit var kNo: String
+    lateinit var dateRegist : String
 
     private var dataList = ArrayList<Tenant>()
 
@@ -86,10 +87,13 @@ class HomeFragment : Fragment(), DatePickerDialog.OnDateSetListener {
     }
 
     private fun dialogAdd() {
+
         val view: View = layoutInflater.inflate(R.layout.layout_dialog, null)
         val pickDate: Button = view.findViewById(R.id.btnDate)
-        val etName: EditText = view.findViewById(R.id.etName)
-        val etNo: EditText = view.findViewById(R.id.etNo)
+
+        pickDate.setOnClickListener {
+            showDatePicker()
+        }
 
         val dialog = AlertDialog.Builder(context!!)
         dialog.apply {
@@ -97,36 +101,45 @@ class HomeFragment : Fragment(), DatePickerDialog.OnDateSetListener {
             setNegativeButton("Batal") { dialogInterface, i ->
                 dialogInterface.dismiss()
             }
-            setPositiveButton("Tambah") { dialogInterface, i ->
-                kName = etName.text.toString()
-                kNo = etNo.text.toString()
-
-                if (kName.equals("")) {
-                    Toast.makeText(context, "Nama tidak boleh kosong!", Toast.LENGTH_SHORT).show()
-                    etName.requestFocus()
-                } else if (kNo.equals("")) {
-                    Toast.makeText(context, "Nomor HP masa tidak punya?!", Toast.LENGTH_SHORT)
-                        .show()
-                    etNo.requestFocus()
-                } else {
-                    saveData(kName, kNo)
-                }
-            }
-        }
-
-        pickDate.setOnClickListener {
-            showDatePicker()
+            setPositiveButton("Tambah", null)
         }
 
         dialog.setView(view)
-        dialog.show()
+
+        val alertDialog = dialog.create()
+        alertDialog.show()
+
+        val positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
+        positiveButton.setOnClickListener {
+            kName = view.etName.text.toString().trim()
+            kNo = view.etNo.text.toString().trim()
+
+            if (kName.equals("") && kNo.equals("")) {
+                view.etName.error = "Nama tidak boleh kosong"
+                view.etNo.error = "No. HP masa tidak punya?!"
+            }
+            else if (kName.equals("")) {
+                view.etName.error = "Nama tidak boleh kosong"
+                view.etName.requestFocus()
+            } else if (kNo.equals("")) {
+                view.etNo.error = "No. HP masa tidak punya?!"
+                view.etNo.requestFocus()
+            } else {
+                saveData(kName, kNo, dateRegist)
+                alertDialog.dismiss()
+            }
+        }
+
+
+
     }
 
-    private fun saveData(kName: String, kNo: String) {
+    private fun saveData(kName: String, kNo: String, dateRegist: String) {
 
         val tenant = Tenant()
         tenant.name = kName
         tenant.noHp = kNo
+        tenant.tgglMasuk = dateRegist
 
         mFirebaseDatabase.child(kName).addValueEventListener(object : ValueEventListener {
 
@@ -156,7 +169,7 @@ class HomeFragment : Fragment(), DatePickerDialog.OnDateSetListener {
     }
 
     override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
-        val date: String = "tanggal sekarang : " + p3 + "/" + p2 + 1 + "/" + p1
+         dateRegist = "" + p3 + "/" + p2 + 1 + "/" + p1
     }
 
 }
