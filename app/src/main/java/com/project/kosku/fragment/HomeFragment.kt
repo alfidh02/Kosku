@@ -63,7 +63,7 @@ class HomeFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
         val dialog = AlertDialog.Builder(context!!)
         dialog.apply {
-            setTitle("Data Penyewa")
+            setTitle("Data Kos")
             setNegativeButton("Batal") { dialogInterface, i ->
                 dialogInterface.dismiss()
             }

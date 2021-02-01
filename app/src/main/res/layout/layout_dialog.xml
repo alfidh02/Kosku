@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:hint="Nama Penyewa">
+        android:hint="Nama">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etName"
