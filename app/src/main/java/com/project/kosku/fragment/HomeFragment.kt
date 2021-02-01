@@ -17,6 +17,7 @@ import com.project.kosku.adapter.HomeAdapter
 import com.project.kosku.model.Tenant
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.layout_dialog.view.*
+import java.text.SimpleDateFormat
 import java.util.*
 
 class HomeFragment : Fragment(), DatePickerDialog.OnDateSetListener {
@@ -24,7 +25,7 @@ class HomeFragment : Fragment(), DatePickerDialog.OnDateSetListener {
     private lateinit var mFirebaseInstance: FirebaseDatabase
     lateinit var kName: String
     lateinit var kNo: String
-    lateinit var dateRegist : String
+    lateinit var dateRegist: String
 
     private var dataList = ArrayList<Tenant>()
 
@@ -117,8 +118,7 @@ class HomeFragment : Fragment(), DatePickerDialog.OnDateSetListener {
             if (kName.equals("") && kNo.equals("")) {
                 view.etName.error = "Nama tidak boleh kosong"
                 view.etNo.error = "No. HP masa tidak punya?!"
-            }
-            else if (kName.equals("")) {
+            } else if (kName.equals("")) {
                 view.etName.error = "Nama tidak boleh kosong"
                 view.etName.requestFocus()
             } else if (kNo.equals("")) {
@@ -129,9 +129,6 @@ class HomeFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                 alertDialog.dismiss()
             }
         }
-
-
-
     }
 
     private fun saveData(kName: String, kNo: String, dateRegist: String) {
@@ -169,7 +166,11 @@ class HomeFragment : Fragment(), DatePickerDialog.OnDateSetListener {
     }
 
     override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
-         dateRegist = "" + p3 + "/" + p2 + 1 + "/" + p1
+        var calendar = Calendar.getInstance()
+        calendar.set(p1, p2, p3)
+
+        var dateFormat = SimpleDateFormat("dd/MM/yyyy")
+        dateRegist = dateFormat.format(calendar.time)
     }
 
 }
