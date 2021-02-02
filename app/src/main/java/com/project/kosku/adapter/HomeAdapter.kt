@@ -1,5 +1,7 @@
 package com.project.kosku.adapter
 
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,9 +22,15 @@ class HomeAdapter (private var tenants : ArrayList<Tenant>) : RecyclerView.Adapt
 
     override fun onBindViewHolder(holder: HomeViewHolder, position: Int) {
         val tenant = tenants[position]
+        var url = "https://api.whatsapp.com/send?phone=62${tenant.noHp}"
 
         holder.itemView.tvName.text = tenant.name
+
         holder.itemView.tvNo.text = tenant.noHp
+        holder.itemView.tvNo.setOnClickListener {
+            it.context.startActivity(Intent(Intent.ACTION_VIEW).setData(Uri.parse(url)))
+        }
+
         holder.itemView.tvDate.text = tenant.tgglMasuk
     }
 
