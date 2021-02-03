@@ -28,17 +28,8 @@ class HomeAdapter(private var tenants: ArrayList<Tenant>) :
 
         holder.itemView.setOnClickListener {
             it.context.startActivity(
-                Intent(it.context, TenantActivity::class.java)
+                Intent(it.context, TenantActivity::class.java).putExtra("dataKos",tenant)
             )
-                //Passing the Parcelable
-                //
-                //val intent = Intent(this, AnotherActivity::class.java)
-                //intent.putExtra("extra_item", item)
-                //
-                //Retrieving the Parcelable
-                //
-                //val item = intent.getParcelableExtra("extra_item")
-                //// Do something with the item (example: set Item title and price)
         }
 
         holder.itemView.tvName.text = tenant.name
