@@ -5,7 +5,6 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.project.kosku.R
@@ -30,15 +29,27 @@ class HomeAdapter(private var tenants: ArrayList<Tenant>) :
 
         holder.itemView.setOnClickListener {
             it.context.startActivity(
-                Intent(it.context, TenantActivity::class.java).putExtra("dataKos",tenant)
+                Intent(it.context, TenantActivity::class.java).putExtra("dataKos", tenant)
             )
         }
 
         if (tenant.status == false) {
-            holder.itemView.tvStatus.setTextColor(ResourcesCompat.getColor(holder.itemView.resources,R.color.colorDanger, null))
+            holder.itemView.tvStatus.setTextColor(
+                ResourcesCompat.getColor(
+                    holder.itemView.resources,
+                    R.color.colorDanger,
+                    null
+                )
+            )
             holder.itemView.tvStatus.text = "BELUM BAYAR"
         } else {
-            holder.itemView.tvStatus.setTextColor(ResourcesCompat.getColor(holder.itemView.resources,R.color.colorBtn, null))
+            holder.itemView.tvStatus.setTextColor(
+                ResourcesCompat.getColor(
+                    holder.itemView.resources,
+                    R.color.colorBtn,
+                    null
+                )
+            )
             holder.itemView.tvStatus.text = "SUDAH BAYAR"
         }
 

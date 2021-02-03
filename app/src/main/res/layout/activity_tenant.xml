@@ -162,14 +162,16 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/btnBayar"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
+        android:visibility="gone"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/bg_btn_delete"
         android:paddingHorizontal="32dp"
-        android:text="HAPUS PROFIL"
-        app:backgroundTint="@color/colorDanger"
-        app:icon="@drawable/ic_delete"
+        android:text="TAMBAH PEMBAYARAN"
+        app:backgroundTint="@color/colorBtn"
+        app:icon="@drawable/ic_add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
