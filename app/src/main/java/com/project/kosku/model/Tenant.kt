@@ -7,5 +7,6 @@ import kotlinx.android.parcel.Parcelize
 data class Tenant (
     var name: String? ="",
     var noHp: String? ="",
-    var tgglMasuk: String? =""
+    var tgglMasuk: String? ="",
+    var status: Boolean? = false
 ) : Parcelable

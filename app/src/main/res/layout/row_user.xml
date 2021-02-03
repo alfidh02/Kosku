@@ -93,7 +93,7 @@
                     android:textAlignment="textEnd"
                     android:fontFamily="@font/roboto"
                     android:textColor="@color/colorBtn"
-                    android:text="SUDAH BAYAR"
+                    tools:text="SUDAH BAYAR"
                     android:textSize="12sp" />
 
             </LinearLayout>
