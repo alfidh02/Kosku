@@ -7,10 +7,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
-import com.project.kosku.utility.ProgressDialog
 import com.google.firebase.database.*
 import com.project.kosku.model.Payment
 import com.project.kosku.model.Tenant
+import com.project.kosku.utility.ProgressDialog
 import kotlinx.android.synthetic.main.activity_tenant.*
 import kotlinx.android.synthetic.main.layout_payment.view.*
 import java.util.*
@@ -36,12 +36,15 @@ class TenantActivity : AppCompatActivity() {
         var locale = Locale("id", "ID")
 
         mFirebaseInstance = FirebaseDatabase.getInstance()
-        mFirebaseDatabase = mFirebaseInstance.getReference("Payment").child(Calendar.getInstance().get(Calendar.YEAR)
-            .toString()).child(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale))
 
         tvName.setText(item!!.name)
         tvHp.setText(item!!.noHp)
         tvTggl.setText(item!!.tgglMasuk)
+
+        mFirebaseDatabase = mFirebaseInstance.getReference("Payment").child(
+            Calendar.getInstance().get(Calendar.YEAR)
+                .toString()
+        ).child(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale))
 
         if (item!!.status == false) {
             tvStatus.setTextColor(ResourcesCompat.getColor(resources, R.color.colorDanger, null))
@@ -102,19 +105,25 @@ class TenantActivity : AppCompatActivity() {
         payment.nominal = pNominal
         payment.detail = pDetail
 
-        mFirebaseDatabase.child(tvName.text.toString()).addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@TenantActivity, "${error.message}", Toast.LENGTH_SHORT).show()
-                pDialog.dismiss()
-            }
+        mFirebaseDatabase.child(tvName.text.toString())
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(this@TenantActivity, "${error.message}", Toast.LENGTH_SHORT)
+                        .show()
+                    pDialog.dismiss()
+                }
 
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                mFirebaseDatabase.child(tvName.text.toString()).setValue(payment)
-                pDialog.dismiss()
-            }
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    mFirebaseDatabase.child(tvName.text.toString()).setValue(payment)
+                    pDialog.dismiss()
+                }
 
-        })
+            })
 
+        if (pDetail.toLowerCase().contains("kos")) {
+            FirebaseDatabase.getInstance().getReference("Tenant").child(tvName.text.toString())
+                .child("status").setValue(true)
+        }
     }
 
     private fun setToolbar() {
