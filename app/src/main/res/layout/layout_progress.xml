@@ -7,9 +7,9 @@
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyle"
-        android:layout_width="80dp"
+        android:layout_width="60dp"
         android:layout_margin="7dp"
-        android:layout_height="80dp"/>
+        android:layout_height="60dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

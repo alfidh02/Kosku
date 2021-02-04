@@ -17,6 +17,7 @@ import java.util.*
 
 class TenantActivity : AppCompatActivity() {
     private lateinit var mFirebaseDatabase: DatabaseReference
+    private lateinit var mTenantDatabase: DatabaseReference
     private lateinit var mFirebaseInstance: FirebaseDatabase
     lateinit var pNominal: String
     lateinit var pDetail: String
@@ -33,18 +34,9 @@ class TenantActivity : AppCompatActivity() {
 
         val item = intent.getParcelableExtra<Tenant>("dataKos")
 
-        var locale = Locale("id", "ID")
-
-        mFirebaseInstance = FirebaseDatabase.getInstance()
-
         tvName.setText(item!!.name)
         tvHp.setText(item!!.noHp)
         tvTggl.setText(item!!.tgglMasuk)
-
-        mFirebaseDatabase = mFirebaseInstance.getReference("Payment").child(
-            Calendar.getInstance().get(Calendar.YEAR)
-                .toString()
-        ).child(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale))
 
         if (item!!.status == false) {
             tvStatus.setTextColor(ResourcesCompat.getColor(resources, R.color.colorDanger, null))
@@ -55,9 +47,58 @@ class TenantActivity : AppCompatActivity() {
             tvStatus.setText("SUDAH BAYAR")
         }
 
+        swipeRefresh.setOnRefreshListener {
+            setData()
+        }
+
+        mFirebaseInstance = FirebaseDatabase.getInstance()
+        mTenantDatabase =
+            mFirebaseInstance.getReference("Tenant").child(tvName.text.toString().trim())
+        var locale = Locale("id", "ID")
+        mFirebaseDatabase = mFirebaseInstance.getReference("Payment").child(
+            Calendar.getInstance().get(Calendar.YEAR)
+                .toString()
+        ).child(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale))
+
         btnBayar.setOnClickListener {
             addPayment()
         }
+    }
+
+    private fun setData() {
+
+        mTenantDatabase.child("status").addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+                Toast.makeText(this@TenantActivity, "${p0.message}", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.value == false) {
+                    tvStatus.setTextColor(
+                        ResourcesCompat.getColor(
+                            resources,
+                            R.color.colorDanger,
+                            null
+                        )
+                    )
+                    tvStatus.setText("BELUM BAYAR")
+                    btnBayar.visibility = View.VISIBLE
+                } else {
+                    tvStatus.setTextColor(
+                        ResourcesCompat.getColor(
+                            resources,
+                            R.color.colorBtn,
+                            null
+                        )
+                    )
+                    tvStatus.setText("SUDAH BAYAR")
+                    btnBayar.visibility = View.GONE
+                }
+            }
+
+        })
+
+        swipeRefresh.isRefreshing = false
     }
 
     private fun addPayment() {
@@ -104,6 +145,7 @@ class TenantActivity : AppCompatActivity() {
         val payment = Payment()
         payment.nominal = pNominal
         payment.detail = pDetail
+        payment.nama = tvName.text.toString().trim()
 
         mFirebaseDatabase.child(tvName.text.toString())
             .addValueEventListener(object : ValueEventListener {
@@ -116,14 +158,17 @@ class TenantActivity : AppCompatActivity() {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     mFirebaseDatabase.child(tvName.text.toString()).setValue(payment)
                     pDialog.dismiss()
+                    Toast.makeText(
+                        this@TenantActivity,
+                        "Silahkan refresh halaman ^^",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
 
             })
 
-        if (pDetail.toLowerCase().contains("kos")) {
-            FirebaseDatabase.getInstance().getReference("Tenant").child(tvName.text.toString())
-                .child("status").setValue(true)
-        }
+        FirebaseDatabase.getInstance().getReference("Tenant").child(tvName.text.toString())
+            .child("status").setValue(true)
     }
 
     private fun setToolbar() {
