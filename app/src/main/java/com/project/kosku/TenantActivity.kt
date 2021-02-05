@@ -1,6 +1,7 @@
 package com.project.kosku
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
@@ -38,6 +39,8 @@ class TenantActivity : AppCompatActivity() {
         tvHp.setText(item!!.noHp)
         tvTggl.setText(item!!.tgglMasuk)
 
+//        Log.d("TAG", "onCreate: ${item.status}")
+//
         if (item!!.status == false) {
             tvStatus.setTextColor(ResourcesCompat.getColor(resources, R.color.colorDanger, null))
             tvStatus.setText("BELUM BAYAR")
@@ -54,6 +57,7 @@ class TenantActivity : AppCompatActivity() {
         mFirebaseInstance = FirebaseDatabase.getInstance()
         mTenantDatabase =
             mFirebaseInstance.getReference("Tenant").child(tvName.text.toString().trim())
+
         var locale = Locale("id", "ID")
         mFirebaseDatabase = mFirebaseInstance.getReference("Payment").child(
             Calendar.getInstance().get(Calendar.YEAR)
