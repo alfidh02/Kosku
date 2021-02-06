@@ -1,34 +1,16 @@
 package com.project.kosku.fragment
 
+import android.animation.Animator
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.project.kosku.R
+import kotlinx.android.synthetic.main.fragment_cost.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [CostFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class CostFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    var isFabOpen :Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,23 +20,45 @@ class CostFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_cost, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment CostFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            CostFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        fabAdd.setOnClickListener {
+            if (!isFabOpen) showFabMenu() else closeFabMenu()
+        }
+    }
+
+    private fun showFabMenu() {
+        isFabOpen = true
+        fabLayout1.visibility = View.VISIBLE
+        fabLayout2.visibility = View.VISIBLE
+
+        fabAdd.animate().rotationBy(135F)
+        fabLayout1.animate().translationY(-resources.getDimension(R.dimen.standard_70))
+        fabLayout2.animate().translationY(-resources.getDimension(R.dimen.standard_120))
+    }
+
+    private fun closeFabMenu() {
+        isFabOpen = false
+
+        fabAdd.animate().rotation(0F)
+        fabLayout1.animate().translationY(0F)
+        fabLayout2.animate().translationY(0F)
+        fabLayout2.animate().translationY(0F).setListener(object : Animator.AnimatorListener {
+            override fun onAnimationRepeat(p0: Animator?) {}
+
+            override fun onAnimationEnd(animator: Animator?) {
+                if (!isFabOpen) {
+                    fabLayout1.visibility = View.GONE
+                    fabLayout2.visibility = View.GONE
                 }
             }
+
+            override fun onAnimationCancel(p0: Animator?) {}
+
+            override fun onAnimationStart(p0: Animator?) {}
+
+        })
     }
+
 }

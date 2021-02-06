@@ -18,6 +18,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:visibility="gone"
         android:clipToPadding="false"
         android:gravity="center_vertical">
 
@@ -25,12 +28,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_list"
-            android:backgroundTint="@color/colorDanger"
+            android:backgroundTint="@color/colorProfile"
             android:fontFamily="@font/poppins"
             android:foreground="?attr/selectableItemBackgroundBorderless"
             android:padding="8dp"
             android:text="Pengeluaran"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:textSize="12sp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -39,7 +42,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:src="@drawable/ic_pengeluaran"
-            app:backgroundTint="#304FFE"
+            app:tint="@android:color/white"
+            app:backgroundTint="@color/colorDanger"
             app:fabSize="mini" />
     </LinearLayout>
 
@@ -49,6 +53,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:visibility="gone"
         android:clipToPadding="false"
         android:gravity="center_vertical">
 
@@ -56,12 +63,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_list"
-            android:backgroundTint="@color/colorBtn"
+            android:backgroundTint="@color/colorProfile"
             android:fontFamily="@font/poppins"
             android:foreground="?attr/selectableItemBackgroundBorderless"
             android:padding="8dp"
             android:text="Pemasukan"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:textSize="12sp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -70,7 +77,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:src="@drawable/ic_pemasukan"
-            app:backgroundTint="#304FFE"
+            app:tint="@android:color/white"
+            app:backgroundTint="@color/colorBtn"
             app:fabSize="mini" />
     </LinearLayout>
 
@@ -79,6 +87,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
         android:clipToPadding="false"
         android:gravity="center_vertical">
 
@@ -87,6 +97,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_add"
+            app:elevation="3dp"
             app:backgroundTint="#304FFE"
             app:tint="@android:color/white" />
 
