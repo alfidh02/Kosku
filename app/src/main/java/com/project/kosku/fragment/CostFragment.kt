@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.project.kosku.R
+import com.project.kosku.adapter.TabAdapter
 import kotlinx.android.synthetic.main.fragment_cost.*
 
 class CostFragment : Fragment() {
@@ -22,6 +23,12 @@ class CostFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val adapter = TabAdapter(childFragmentManager, tabLayout.tabCount)
+        adapter.addFragment(IncomeFragment(), "Pemasukan")
+        adapter.addFragment(OutcomeFragment(), "Pengeluaran")
+        viewPager.adapter = adapter
+        tabLayout.setupWithViewPager(viewPager)
 
         fabAdd.setOnClickListener {
             if (!isFabOpen) showFabMenu() else closeFabMenu()

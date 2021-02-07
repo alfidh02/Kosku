@@ -7,10 +7,36 @@
     android:padding="20dp"
     tools:context=".fragment.CostFragment">
 
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@drawable/bg_tab"
+        android:layout_marginTop="10dp"
+        app:tabGravity="fill"
+        app:tabInlineLabel="true"
+        app:tabIndicator="@drawable/bg_text"
+        app:tabIndicatorColor="@android:color/white"
+        app:tabIndicatorFullWidth="true"
+        app:tabIndicatorGravity="stretch"
+        app:tabIndicatorHeight="54dp"
+        app:tabSelectedTextColor="@android:color/black"
+        app:tabTextColor="@android:color/white"
+        app:tabMode="fixed" />
+    
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never"
+        android:layout_below="@id/tabLayout"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvCost"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_below="@id/tabLayout"/>
 
     <LinearLayout
         android:id="@+id/fabLayout1"
@@ -98,7 +124,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_add"
             app:elevation="3dp"
-            app:backgroundTint="#304FFE"
+            app:backgroundTint="@color/colorAccent"
             app:tint="@android:color/white" />
 
     </LinearLayout>
