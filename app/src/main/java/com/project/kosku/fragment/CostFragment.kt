@@ -3,7 +3,6 @@ package com.project.kosku.fragment
 import android.animation.Animator
 import android.app.DatePickerDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +16,6 @@ import com.project.kosku.R
 import com.project.kosku.adapter.TabAdapter
 import com.project.kosku.model.Wallet
 import kotlinx.android.synthetic.main.fragment_cost.*
-import kotlinx.android.synthetic.main.layout_dialog.view.*
 import kotlinx.android.synthetic.main.layout_wallet.view.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -93,14 +91,14 @@ class CostFragment : Fragment(), DatePickerDialog.OnDateSetListener {
             tDetail = view.etDetail.text.toString().trim()
 
             if (tNominal.equals("") && tDetail.equals("")) {
-                view.etName.error = "Nama tidak boleh kosong"
-                view.etNo.error = "No. HP masa tidak punya?!"
+                view.etNominal.error = "Nominal tidak boleh kosong"
+                view.etDetail.error = "Harap isi keterangan"
             } else if (tNominal.equals("")) {
-                view.etName.error = "Nama tidak boleh kosong"
-                view.etName.requestFocus()
+                view.etNominal.error = "Nominal tidak boleh kosong"
+                view.etNominal.requestFocus()
             } else if (tDetail.equals("")) {
-                view.etNo.error = "No. HP masa tidak punya?!"
-                view.etNo.requestFocus()
+                view.etDetail.error = "Harap isi keterangan"
+                view.etDetail.requestFocus()
             } else {
                 saveIncome(tNominal, tDetail, dateTransaction)
                 alertDialog.dismiss()
@@ -137,14 +135,14 @@ class CostFragment : Fragment(), DatePickerDialog.OnDateSetListener {
             tDetail = view.etDetail.text.toString().trim()
 
             if (tNominal.equals("") && tDetail.equals("")) {
-                view.etName.error = "Nominal tidak boleh kosong"
-                view.etNo.error = "Harap isi keterangan"
+                view.etNominal.error = "Nominal tidak boleh kosong"
+                view.etDetail.error = "Harap isi keterangan"
             } else if (tNominal.equals("")) {
-                view.etName.error = "Nominal tidak boleh kosong"
-                view.etName.requestFocus()
+                view.etNominal.error = "Nominal tidak boleh kosong"
+                view.etNominal.requestFocus()
             } else if (tDetail.equals("")) {
-                view.etNo.error = "Harap isi keterangan"
-                view.etNo.requestFocus()
+                view.etDetail.error = "Harap isi keterangan"
+                view.etDetail.requestFocus()
             } else {
                 saveOutcome(tNominal, tDetail, dateTransaction)
                 alertDialog.dismiss()
