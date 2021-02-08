@@ -3,7 +3,7 @@ package com.project.kosku.fragment
 import android.animation.Animator
 import android.app.DatePickerDialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import com.google.firebase.database.*
 import com.project.kosku.R
 import com.project.kosku.adapter.TabAdapter
@@ -24,10 +25,11 @@ import java.util.*
 class CostFragment : Fragment(), DatePickerDialog.OnDateSetListener {
     private lateinit var mFirebaseDatabase: DatabaseReference
     private lateinit var mFirebaseInstance: FirebaseDatabase
-    var isFabOpen :Boolean = false
+    var isFabOpen: Boolean = false
     lateinit var tNominal: String
     lateinit var tDetail: String
     lateinit var dateTransaction: String
+    val timeStamp : String = System.currentTimeMillis().toString()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,7 +47,7 @@ class CostFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
         val adapter = TabAdapter(childFragmentManager, tabLayout.tabCount)
         adapter.addFragment(IncomeFragment(), "Pemasukan")
-        adapter.addFragment(OutcomeFragment(), "Pengeluaran")
+        adapter.addFragment(ExpenditureFragment(), "Pengeluaran")
         viewPager.adapter = adapter
         tabLayout.setupWithViewPager(viewPager)
 
@@ -54,12 +56,16 @@ class CostFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         }
 
         fabLayout1.setOnClickListener {
-            dialogAdd()
+            dialogOutcome()
+        }
+
+        fabLayout2.setOnClickListener {
+            dialogIncome()
         }
     }
 
-    private fun dialogAdd() {
-
+    private fun dialogIncome() {
+        closeFabMenu()
         val view: View = layoutInflater.inflate(R.layout.layout_wallet, null)
         val pickDate: Button = view.findViewById(R.id.btnDate)
 
@@ -69,7 +75,7 @@ class CostFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
         val dialog = AlertDialog.Builder(context!!)
         dialog.apply {
-            setTitle("Data Kos")
+            setTitle("Data Pemasukan")
             setNegativeButton("Batal") { dialogInterface, i ->
                 dialogInterface.dismiss()
             }
@@ -96,10 +102,85 @@ class CostFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                 view.etNo.error = "No. HP masa tidak punya?!"
                 view.etNo.requestFocus()
             } else {
+                saveIncome(tNominal, tDetail, dateTransaction)
+                alertDialog.dismiss()
+            }
+        }
+    }
+
+    private fun dialogOutcome() {
+        closeFabMenu()
+        val view: View = layoutInflater.inflate(R.layout.layout_wallet, null)
+        val pickDate: Button = view.findViewById(R.id.btnDate)
+
+        pickDate.setOnClickListener {
+            showDatePicker()
+        }
+
+        val dialog = AlertDialog.Builder(context!!)
+        dialog.apply {
+            setTitle("Data Pengeluaran")
+            setNegativeButton("Batal") { dialogInterface, i ->
+                dialogInterface.dismiss()
+            }
+            setPositiveButton("Tambah", null)
+        }
+
+        dialog.setView(view)
+
+        val alertDialog = dialog.create()
+        alertDialog.show()
+
+        val positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
+        positiveButton.setOnClickListener {
+            tNominal = view.etNominal.text.toString().trim()
+            tDetail = view.etDetail.text.toString().trim()
+
+            if (tNominal.equals("") && tDetail.equals("")) {
+                view.etName.error = "Nominal tidak boleh kosong"
+                view.etNo.error = "Harap isi keterangan"
+            } else if (tNominal.equals("")) {
+                view.etName.error = "Nominal tidak boleh kosong"
+                view.etName.requestFocus()
+            } else if (tDetail.equals("")) {
+                view.etNo.error = "Harap isi keterangan"
+                view.etNo.requestFocus()
+            } else {
                 saveOutcome(tNominal, tDetail, dateTransaction)
                 alertDialog.dismiss()
             }
         }
+    }
+
+    private fun saveIncome(tNominal: String, tDetail: String, dateTransaction: String) {
+
+        val wallet = Wallet()
+        wallet.nominal = tNominal
+        wallet.detail = tDetail
+        wallet.date = dateTransaction
+        wallet.tipe = true
+
+        var locale = Locale("id", "ID")
+
+        mFirebaseDatabase.child("Income")
+            .child(Calendar.getInstance().get(Calendar.YEAR).toString())
+            .child(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale)).child(timeStamp)
+            .addValueEventListener(object : ValueEventListener {
+
+                override fun onDataChange(p0: DataSnapshot) {
+                    mFirebaseDatabase.child("Income")
+                        .child(Calendar.getInstance().get(Calendar.YEAR).toString())
+                        .child(
+                            Calendar.getInstance()
+                                .getDisplayName(Calendar.MONTH, Calendar.LONG, locale)
+                        ).child(timeStamp).setValue(wallet)
+                    Toast.makeText(context, "Data berhasil ditambahkan!", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onCancelled(p0: DatabaseError) {
+                    Toast.makeText(context, "${p0.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
     }
 
     private fun saveOutcome(tNominal: String, tDetail: String, dateTransaction: String) {
@@ -110,17 +191,27 @@ class CostFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         wallet.date = dateTransaction
         wallet.tipe = false
 
-        mFirebaseDatabase.child("Income").addValueEventListener(object : ValueEventListener {
+        var locale = Locale("id", "ID")
 
-            override fun onDataChange(p0: DataSnapshot) {
-                mFirebaseDatabase.child("Income").setValue(wallet)
-                succesAnimation()
-            }
+        mFirebaseDatabase.child("Outcome")
+            .child(Calendar.getInstance().get(Calendar.YEAR).toString())
+            .child(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale)).child(timeStamp)
+            .addValueEventListener(object : ValueEventListener {
 
-            override fun onCancelled(p0: DatabaseError) {
-                Toast.makeText(context, "${p0.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
+                override fun onDataChange(p0: DataSnapshot) {
+                    mFirebaseDatabase.child("Outcome")
+                        .child(Calendar.getInstance().get(Calendar.YEAR).toString())
+                        .child(
+                            Calendar.getInstance()
+                                .getDisplayName(Calendar.MONTH, Calendar.LONG, locale)
+                        ).child(timeStamp).setValue(wallet)
+                    Toast.makeText(context, "Data berhasil ditambahkan!", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onCancelled(p0: DatabaseError) {
+                    Toast.makeText(context, "${p0.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
 
     }
 
@@ -174,20 +265,8 @@ class CostFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         var calendar = Calendar.getInstance()
         calendar.set(p1, p2, p3)
 
-        var dateFormat = SimpleDateFormat("dd/MM/yyyy")
+        var dateFormat = SimpleDateFormat("dd MMMM yyyy")
         dateTransaction = dateFormat.format(calendar.time)
     }
 
-    private fun succesAnimation() {
-        val  dialogBuilder = AlertDialog.Builder(context!!)
-        val layoutView : View = layoutInflater.inflate(R.layout.layout_success, null)
-        val dialogButton : Button = layoutView.findViewById(R.id.btnDialog)
-        dialogBuilder.setView(layoutView)
-
-        val  alertDialog = dialogBuilder.create()
-        alertDialog.show()
-        dialogButton.setOnClickListener {
-            alertDialog.dismiss()
-        }
-    }
 }
