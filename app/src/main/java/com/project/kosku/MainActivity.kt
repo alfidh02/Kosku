@@ -1,9 +1,8 @@
 package com.project.kosku
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.project.kosku.fragment.CostFragment
 import com.project.kosku.fragment.HomeFragment
@@ -11,29 +10,48 @@ import com.project.kosku.fragment.ReportFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        )
 
         if (savedInstanceState == null) {
-            btmNavbar.setItemSelected(R.id.home, true)
-            supportFragmentManager.beginTransaction().replace(R.id.containerFrame, HomeFragment()).commit()
+            btmNavbar.selectedItemId = R.id.home
+            addFragment(HomeFragment())
         }
 
-        btmNavbar.setOnItemSelectedListener { id ->
-            var fragment : Fragment? = null
-            when (id) {
-                R.id.home -> fragment = HomeFragment()
-                R.id.money -> fragment = CostFragment()
-                R.id.report -> fragment = ReportFragment()
+        btmNavbar.setOnNavigationItemSelectedListener {
+            when(it.itemId) {
+                R.id.home -> {
+                    addFragment(HomeFragment())
+                    return@setOnNavigationItemSelectedListener true
+                }
+                R.id.money -> {
+                    addFragment(CostFragment())
+                    return@setOnNavigationItemSelectedListener true
+                }
+                R.id.report -> {
+                    addFragment(ReportFragment())
+                    return@setOnNavigationItemSelectedListener true
+                }
             }
-            if (fragment != null) {
-                supportFragmentManager.beginTransaction().replace(R.id.containerFrame,fragment).commit()
-            } else {
-                Log.e("TAG", "Error membuat fragment")
-            }
+            false
         }
+    }
+
+    private fun addFragment(fragment: Fragment) {
+        supportFragmentManager
+            .beginTransaction()
+            .setCustomAnimations(
+                R.anim.design_bottom_sheet_slide_in,
+                R.anim.design_bottom_sheet_slide_out
+            )
+            .replace(R.id.containerFrame, fragment, fragment.javaClass.getSimpleName())
+            .commit()
     }
 }
