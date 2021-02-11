@@ -47,10 +47,6 @@ class MainActivity : AppCompatActivity() {
     private fun addFragment(fragment: Fragment) {
         supportFragmentManager
             .beginTransaction()
-            .setCustomAnimations(
-                R.anim.design_bottom_sheet_slide_in,
-                R.anim.design_bottom_sheet_slide_out
-            )
             .replace(R.id.containerFrame, fragment, fragment.javaClass.getSimpleName())
             .commit()
     }
