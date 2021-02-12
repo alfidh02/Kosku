@@ -70,11 +70,9 @@ class ExpenditureFragment : Fragment() {
             ).toString()
         ).child(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale))
 
-        setupRecycler()
-    }
+        rvExpenditure.layoutManager = LinearLayoutManager(context!!)
+        rvExpenditure.adapter = WalletAdapter(dataList)
 
-    private fun setupRecycler() {
-        rvExpenditure.layoutManager = LinearLayoutManager(context!!.applicationContext)
         loadData()
     }
 

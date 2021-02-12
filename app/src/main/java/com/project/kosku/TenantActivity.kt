@@ -11,17 +11,22 @@ import androidx.core.content.res.ResourcesCompat
 import com.google.firebase.database.*
 import com.project.kosku.model.Payment
 import com.project.kosku.model.Tenant
+import com.project.kosku.model.Wallet
 import com.project.kosku.utility.ProgressDialog
 import kotlinx.android.synthetic.main.activity_tenant.*
 import kotlinx.android.synthetic.main.layout_payment.view.*
+import java.text.SimpleDateFormat
 import java.util.*
 
 class TenantActivity : AppCompatActivity() {
     private lateinit var mFirebaseDatabase: DatabaseReference
     private lateinit var mTenantDatabase: DatabaseReference
+    private lateinit var mWalletDatabase: DatabaseReference
     private lateinit var mFirebaseInstance: FirebaseDatabase
     lateinit var pNominal: String
     lateinit var pDetail: String
+    val timeStamp : String = System.currentTimeMillis().toString()
+    var locale = Locale("id", "ID")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +63,8 @@ class TenantActivity : AppCompatActivity() {
         mTenantDatabase =
             mFirebaseInstance.getReference("Tenant").child(tvName.text.toString().trim())
 
-        var locale = Locale("id", "ID")
+        mWalletDatabase = mFirebaseInstance.getReference("Wallet")
+
         mFirebaseDatabase = mFirebaseInstance.getReference("Payment").child(
             Calendar.getInstance().get(Calendar.YEAR)
                 .toString()
@@ -173,6 +179,29 @@ class TenantActivity : AppCompatActivity() {
 
         FirebaseDatabase.getInstance().getReference("Tenant").child(tvName.text.toString())
             .child("status").setValue(true)
+
+        val wallet = Wallet()
+        wallet.detail = "$pDetail dari ${tvName.text.toString().trim()}"
+        wallet.nominal = pNominal
+        wallet.tipe = true
+        wallet.date = SimpleDateFormat("dd MMMM yyyy").format(Calendar.getInstance().time)
+
+        mWalletDatabase.child("Income").child(
+            Calendar.getInstance().get(
+                Calendar.YEAR
+            ).toString()
+        ).child(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale)).child(timeStamp).addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {}
+
+            override fun onDataChange(p0: DataSnapshot) {
+                mWalletDatabase.child("Income").child(
+                    Calendar.getInstance().get(
+                        Calendar.YEAR
+                    ).toString()
+                ).child(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale)).child(timeStamp).setValue(wallet)
+            }
+
+        })
     }
 
     private fun setToolbar() {

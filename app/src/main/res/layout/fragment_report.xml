@@ -64,10 +64,14 @@
                 android:fontFamily="@font/roboto_light"
                 android:textColor="@android:color/white"
                 android:text="Nominal"/>
-
         </TableRow>
-
-
     </TableLayout>
+    
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvTable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:overScrollMode="never"/>
+
 
 </LinearLayout>

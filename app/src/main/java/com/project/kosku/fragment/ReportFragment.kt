@@ -18,4 +18,8 @@ class ReportFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_report, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+    }
+
 }

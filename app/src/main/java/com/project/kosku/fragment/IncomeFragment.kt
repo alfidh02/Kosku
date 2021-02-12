@@ -74,13 +74,12 @@ class IncomeFragment : Fragment() {
             ).toString()
         ).child(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale))
 
-        setupRecycler()
-    }
+        rvIncome.layoutManager = LinearLayoutManager(context!!)
+        rvIncome.adapter = WalletAdapter(dataList)
 
-    private fun setupRecycler() {
-        rvIncome.layoutManager = LinearLayoutManager(context!!.applicationContext)
         loadData()
     }
+
 
     private fun loadData() {
         mFirebaseDatabase.addValueEventListener(object : ValueEventListener {

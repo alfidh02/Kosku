@@ -78,7 +78,11 @@ class HomeFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         fabAdd.setOnClickListener {
             dialogAdd()
         }
-        setupRecycler()
+
+        rvList.layoutManager = LinearLayoutManager(context!!)
+        rvList.adapter = HomeAdapter(dataList)
+
+        loadData()
     }
 
     private fun filter(text: String) {
@@ -91,16 +95,10 @@ class HomeFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         (rvList.adapter as HomeAdapter).updateList(temp)
     }
 
-    private fun setupRecycler() {
-        rvList.layoutManager = LinearLayoutManager(context!!.applicationContext)
-        loadData()
-    }
-
     private fun hideKeyboard() {
         val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(requireActivity().currentFocus?.windowToken, 0)
     }
-
 
     private fun loadData() {
         mFirebaseDatabase.addValueEventListener(object : ValueEventListener {
