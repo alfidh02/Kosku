@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".fragment.ReportFragment">
+    tools:context=".fragment.ReportFragment"
+    android:padding="20dp">
 
     <TextView
         android:layout_width="match_parent"
@@ -13,17 +14,39 @@
         android:gravity="center"
         android:textStyle="bold"
         android:textSize="16sp"
+        android:background="@drawable/bg_profile"
+        android:padding="10dp"
         android:textColor="@color/colorSecondary"
         android:layout_marginTop="24dp"
-        android:text="Laporan Keuangan (Tahunan)" />
-    <TextView
+        android:layout_marginBottom="12dp"
+        android:text="LAPORAN KEUANGAN (TAHUNAN)" />
+    
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_light"
         android:gravity="center"
-        android:textStyle="bold"
-        android:textColor="@color/colorSecondary"
-        android:text="Periode : " />
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_light"
+            android:textStyle="bold"
+            android:textColor="@color/colorSecondary"
+            android:text="Periode : " />
+
+        <Spinner
+            android:id="@+id/spinnerMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dialog" />
+
+        <Spinner
+            android:id="@+id/spinnerYear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dialog"/>
+
+    </LinearLayout>
     
     <TableLayout
         android:layout_width="match_parent"
@@ -39,33 +62,43 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="0.3"
                 android:fontFamily="@font/roboto_light"
                 android:textColor="@android:color/white"
                 android:text="No."/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:fontFamily="@font/roboto_light"
                 android:textColor="@android:color/white"
                 android:text="Ket."/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="1.4"
                 android:fontFamily="@font/roboto_light"
                 android:textColor="@android:color/white"
                 android:text="Tanggal"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="1.5"
                 android:fontFamily="@font/roboto_light"
                 android:textColor="@android:color/white"
                 android:text="Nominal"/>
         </TableRow>
     </TableLayout>
+
+    <TextView
+        android:id="@+id/tvData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Tidak ada data"
+        android:fontFamily="@font/roboto"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"/>
     
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTable"

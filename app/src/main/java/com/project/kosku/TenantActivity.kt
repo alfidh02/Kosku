@@ -1,7 +1,6 @@
 package com.project.kosku
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
@@ -25,7 +24,7 @@ class TenantActivity : AppCompatActivity() {
     private lateinit var mFirebaseInstance: FirebaseDatabase
     lateinit var pNominal: String
     lateinit var pDetail: String
-    val timeStamp : String = System.currentTimeMillis().toString()
+    val timeStamp: String = System.currentTimeMillis().toString()
     var locale = Locale("id", "ID")
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,10 +64,7 @@ class TenantActivity : AppCompatActivity() {
 
         mWalletDatabase = mFirebaseInstance.getReference("Wallet")
 
-        mFirebaseDatabase = mFirebaseInstance.getReference("Payment").child(
-            Calendar.getInstance().get(Calendar.YEAR)
-                .toString()
-        ).child(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale))
+        mFirebaseDatabase = mFirebaseInstance.getReference("Payment")
 
         btnBayar.setOnClickListener {
             addPayment()
@@ -156,8 +152,9 @@ class TenantActivity : AppCompatActivity() {
         payment.nominal = pNominal
         payment.detail = pDetail
         payment.nama = tvName.text.toString().trim()
+        payment.date = SimpleDateFormat("dd MMMM yyyy").format(Calendar.getInstance().time)
 
-        mFirebaseDatabase.child(tvName.text.toString())
+        mFirebaseDatabase.child(tvName.text.toString()).child(timeStamp)
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     Toast.makeText(this@TenantActivity, "${error.message}", Toast.LENGTH_SHORT)
@@ -166,7 +163,7 @@ class TenantActivity : AppCompatActivity() {
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    mFirebaseDatabase.child(tvName.text.toString()).setValue(payment)
+                    mFirebaseDatabase.child(tvName.text.toString()).child(timeStamp).setValue(payment)
                     pDialog.dismiss()
                     Toast.makeText(
                         this@TenantActivity,
@@ -190,7 +187,8 @@ class TenantActivity : AppCompatActivity() {
             Calendar.getInstance().get(
                 Calendar.YEAR
             ).toString()
-        ).child(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale)).child(timeStamp).addValueEventListener(object : ValueEventListener {
+        ).child(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale))
+            .child(timeStamp).addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {}
 
             override fun onDataChange(p0: DataSnapshot) {
@@ -198,7 +196,19 @@ class TenantActivity : AppCompatActivity() {
                     Calendar.getInstance().get(
                         Calendar.YEAR
                     ).toString()
-                ).child(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale)).child(timeStamp).setValue(wallet)
+                ).child(
+                    Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale)
+                ).child(timeStamp).setValue(wallet)
+            }
+        })
+
+        mWalletDatabase.child("All").child(Calendar.getInstance().get(Calendar.YEAR).toString())
+            .child(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale)).child(timeStamp).addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {}
+
+            override fun onDataChange(p0: DataSnapshot) {
+                mWalletDatabase.child("All").child(Calendar.getInstance().get(Calendar.YEAR).toString())
+                    .child(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale)).child(timeStamp).setValue(wallet)
             }
 
         })
