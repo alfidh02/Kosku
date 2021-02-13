@@ -27,7 +27,7 @@ class CostFragment : Fragment(), DatePickerDialog.OnDateSetListener {
     lateinit var tNominal: String
     lateinit var tDetail: String
     lateinit var dateTransaction: String
-    val timeStamp : String = System.currentTimeMillis().toString()
+    val timeStamp: String = System.currentTimeMillis().toString()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -162,7 +162,8 @@ class CostFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
         mFirebaseDatabase.child("Income")
             .child(Calendar.getInstance().get(Calendar.YEAR).toString())
-            .child(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale)).child(timeStamp)
+            .child(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale))
+            .child(timeStamp)
             .addValueEventListener(object : ValueEventListener {
 
                 override fun onDataChange(p0: DataSnapshot) {
@@ -179,6 +180,21 @@ class CostFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                     Toast.makeText(context, "${p0.message}", Toast.LENGTH_SHORT).show()
                 }
             })
+
+        mFirebaseDatabase.child("All").child(Calendar.getInstance().get(Calendar.YEAR).toString())
+            .child(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale))
+            .child(timeStamp).addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {}
+
+                override fun onDataChange(p0: DataSnapshot) {
+                    mFirebaseDatabase.child("All")
+                        .child(Calendar.getInstance().get(Calendar.YEAR).toString())
+                        .child(
+                            Calendar.getInstance()
+                                .getDisplayName(Calendar.MONTH, Calendar.LONG, locale)
+                        ).child(timeStamp).setValue(wallet)
+                }
+            })
     }
 
     private fun saveOutcome(tNominal: String, tDetail: String, dateTransaction: String) {
@@ -193,7 +209,8 @@ class CostFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
         mFirebaseDatabase.child("Outcome")
             .child(Calendar.getInstance().get(Calendar.YEAR).toString())
-            .child(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale)).child(timeStamp)
+            .child(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale))
+            .child(timeStamp)
             .addValueEventListener(object : ValueEventListener {
 
                 override fun onDataChange(p0: DataSnapshot) {
@@ -211,6 +228,14 @@ class CostFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                 }
             })
 
+        mFirebaseDatabase.child("All").child(timeStamp)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {}
+
+                override fun onDataChange(p0: DataSnapshot) {
+                    mFirebaseDatabase.child("All").child(timeStamp).setValue(wallet)
+                }
+            })
     }
 
     private fun showFabMenu() {

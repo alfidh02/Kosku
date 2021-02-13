@@ -7,5 +7,6 @@ import kotlinx.android.parcel.Parcelize
 data class Payment (
     var nama:String? ="",
     var nominal: String? ="",
-    var detail: String? =""
+    var detail: String? ="",
+    var date:String? =""
 ) : Parcelable
