@@ -31,8 +31,8 @@ class ReportAdapter(private var reports: ArrayList<Wallet>) :
         holder.itemView.tvNomor.setText((position + 1).toString())
         holder.itemView.tvKet.setText(report.detail)
         holder.itemView.tvTanggal.setText(report.date)
-        if (report.tipe == true) holder.itemView.tvNominal.setText("+ ${rupiah.format(report.nominal!!.toDouble())}") else holder.itemView.tvNominal.setText(
-            "- ${rupiah.format(report.nominal!!.toDouble())}")
+        if (report.tipe == true) holder.itemView.tvNominal.setText("+ ${rupiah.format(report.nominal?.toDouble())}") else holder.itemView.tvNominal.setText(
+            "- ${rupiah.format(report.nominal?.toDouble())}")
     }
 
     class ReportViewHolder(view: View) : RecyclerView.ViewHolder(view)

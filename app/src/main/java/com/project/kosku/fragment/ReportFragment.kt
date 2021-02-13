@@ -1,7 +1,6 @@
 package com.project.kosku.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,8 +22,8 @@ import kotlin.collections.ArrayList
 class ReportFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var mFirebaseDatabase: DatabaseReference
     private lateinit var mFirebaseInstance: FirebaseDatabase
-    private lateinit var monthSelected : String
-    private var yearSelected : String = ""
+    private var monthSelected: String = ""
+    private var yearSelected: String = ""
     private var dataList = ArrayList<Wallet>()
     private var years = ArrayList<String>()
 
@@ -39,31 +38,37 @@ class ReportFragment : Fragment(), AdapterView.OnItemSelectedListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var locale = Locale("id", "ID")
         mFirebaseInstance = FirebaseDatabase.getInstance()
-        mFirebaseDatabase = mFirebaseInstance.getReference("Wallet").child("All").child(Calendar.getInstance().get(Calendar.YEAR).toString())
-            .child(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale))
 
         var thisYear = Calendar.getInstance().get(Calendar.YEAR)
-        for (i in 2020..thisYear) { years.add(i.toString()) }
+        for (i in 2020..thisYear) {
+            years.add(i.toString())
+        }
 
-        val adaptYear = ArrayAdapter(context!!,android.R.layout.simple_spinner_item,years)
+        val adaptYear = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, years)
         adaptYear.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerYear.adapter = adaptYear
         spinnerYear.onItemSelectedListener = this
 
-        val adaptMonth = ArrayAdapter.createFromResource(context!!,R.array.months,android.R.layout.simple_spinner_item)
+        val adaptMonth = ArrayAdapter.createFromResource(
+            context!!,
+            R.array.months,
+            android.R.layout.simple_spinner_item
+        )
         adaptMonth.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerMonth.adapter = adaptMonth
-        spinnerMonth.onItemSelectedListener  = this
+        spinnerMonth.onItemSelectedListener = this
 
         rvTable.layoutManager = LinearLayoutManager(context!!)
         rvTable.adapter = ReportAdapter(dataList)
-
-        loadData()
     }
 
-    private fun loadData() {
+    private fun loadData(yearSelected: String, monthSelected: String) {
+
+        mFirebaseDatabase =
+            mFirebaseInstance.getReference("Wallet").child("All").child(yearSelected)
+                .child(monthSelected)
+
         mFirebaseDatabase.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 Toast.makeText(context, "${p0.message}", Toast.LENGTH_SHORT).show()
@@ -80,16 +85,19 @@ class ReportFragment : Fragment(), AdapterView.OnItemSelectedListener {
             }
 
         })
-
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {}
 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-        val spinner : Spinner = p0 as Spinner
+        val spinner: Spinner = p0 as Spinner
 
         if (spinner.id == R.id.spinnerMonth) monthSelected = p0?.getItemAtPosition(p2).toString()
         else if (spinner.id == R.id.spinnerYear) yearSelected = p0?.getItemAtPosition(p2).toString()
+
+        Toast.makeText(context, "Sukses ganti ke $monthSelected $yearSelected", Toast.LENGTH_SHORT)
+            .show()
+        loadData(yearSelected, monthSelected)
     }
 
 }
