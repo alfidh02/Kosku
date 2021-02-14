@@ -1,2 +1,2 @@
 # Kosku
-Aplikasi manajemen uang kos ku
+Personal project to manage my rent house (financial, tenant, and report) system. 
