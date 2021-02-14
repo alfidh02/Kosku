@@ -10,6 +10,8 @@ import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.gkemon.XMLtoPDF.PdfGenerator
+import com.gkemon.XMLtoPDF.PdfGeneratorListener
 import com.google.firebase.database.*
 import com.project.kosku.R
 import com.project.kosku.adapter.ReportAdapter
@@ -61,6 +63,35 @@ class ReportFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
         rvTable.layoutManager = LinearLayoutManager(context!!)
         rvTable.adapter = ReportAdapter(dataList)
+
+        btnPrint.setOnClickListener {
+            tvYear.visibility = View.VISIBLE
+            tvMonth.visibility = View.VISIBLE
+            spinnerYear.visibility = View.GONE
+            spinnerMonth.visibility = View.GONE
+            btnPrint.visibility = View.GONE
+            PdfGenerator.getBuilder()
+                .setContext(context)
+                .fromViewSource()
+                .fromView(view)
+                .setDefaultPageSize(PdfGenerator.PageSize.A4)
+                .setFileName("Rekap Laporan Tahunan")
+                .setFolderName("KoskuDownload")
+                .openPDFafterGeneration(true)
+                .build(object : PdfGeneratorListener() {
+                    override fun onStartPDFGeneration() {}
+
+                    override fun onFinishPDFGeneration() {
+                        tvYear.visibility = View.GONE
+                        tvMonth.visibility = View.GONE
+                        spinnerYear.visibility = View.VISIBLE
+                        spinnerMonth.visibility = View.VISIBLE
+                        btnPrint.visibility = View.VISIBLE
+                        Toast.makeText(context, "PDF berhasil dibuat!", Toast.LENGTH_SHORT).show()
+                    }
+
+                })
+        }
     }
 
     private fun loadData(yearSelected: String, monthSelected: String) {
@@ -75,11 +106,19 @@ class ReportFragment : Fragment(), AdapterView.OnItemSelectedListener {
             }
 
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                if (dataList.isEmpty()) dataList.clear()
+                dataList.clear()
 
                 for (getData in dataSnapshot.children) {
                     val report = getData.getValue(Wallet::class.java)
                     dataList.add(report!!)
+                }
+
+                if (dataList.isEmpty()) {
+                    tvNoData.visibility = View.VISIBLE
+                    btnPrint.visibility = View.GONE
+                }  else {
+                    tvNoData.visibility = View.GONE
+                    btnPrint.visibility = View.VISIBLE
                 }
                 rvTable.adapter = ReportAdapter(dataList)
             }
@@ -97,7 +136,10 @@ class ReportFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
         Toast.makeText(context, "Sukses ganti ke $monthSelected $yearSelected", Toast.LENGTH_SHORT)
             .show()
+
         loadData(yearSelected, monthSelected)
+        tvMonth.text = monthSelected
+        tvYear.text = yearSelected
     }
 
 }

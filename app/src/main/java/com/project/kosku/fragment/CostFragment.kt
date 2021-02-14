@@ -228,12 +228,21 @@ class CostFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                 }
             })
 
-        mFirebaseDatabase.child("All").child(timeStamp)
+        mFirebaseDatabase.child("All").child(Calendar.getInstance().get(Calendar.YEAR).toString())
+            .child(
+                Calendar.getInstance()
+                    .getDisplayName(Calendar.MONTH, Calendar.LONG, locale)
+            ).child(timeStamp)
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {}
 
                 override fun onDataChange(p0: DataSnapshot) {
-                    mFirebaseDatabase.child("All").child(timeStamp).setValue(wallet)
+                    mFirebaseDatabase.child("All")
+                        .child(Calendar.getInstance().get(Calendar.YEAR).toString())
+                        .child(
+                            Calendar.getInstance()
+                                .getDisplayName(Calendar.MONTH, Calendar.LONG, locale)
+                        ).child(timeStamp).setValue(wallet)
                 }
             })
     }

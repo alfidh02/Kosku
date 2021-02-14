@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".fragment.ReportFragment"
     android:padding="20dp">
@@ -30,9 +31,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_light"
-            android:textStyle="bold"
             android:textColor="@color/colorSecondary"
             android:text="Periode : " />
+
+        <TextView
+            android:id="@+id/tvMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:fontFamily="@font/poppins_light"
+            android:textColor="@color/colorSecondary"
+            tools:text="Februari"/>
+
+        <TextView
+            android:id="@+id/tvYear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:visibility="gone"
+            android:fontFamily="@font/poppins_light"
+            android:textColor="@color/colorSecondary"
+            tools:text="2021"/>
 
         <Spinner
             android:id="@+id/spinnerMonth"
@@ -99,6 +118,16 @@
         android:fontFamily="@font/roboto"
         android:layout_marginTop="10dp"
         android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tvNoData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tidak ada data"
+        android:layout_gravity="center_horizontal"
+        android:fontFamily="@font/roboto_light"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"/>
     
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTable"
@@ -106,5 +135,21 @@
         android:layout_height="wrap_content"
         android:overScrollMode="never"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <Button
+        android:id="@+id/btnPrint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/bg_btn_delete"
+        app:backgroundTint="@color/colorDanger"
+        app:icon="@drawable/ic_print"
+        android:text="PRINT KE PDF"
+        android:fontFamily="@font/roboto"/>
 
 </LinearLayout>
