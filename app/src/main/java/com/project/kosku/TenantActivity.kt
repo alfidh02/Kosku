@@ -1,5 +1,7 @@
 package com.project.kosku
 
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
@@ -33,9 +35,13 @@ class TenantActivity : AppCompatActivity() {
         setToolbar()
 
         window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         )
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            this.window.decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
+        }
 
         val item = intent.getParcelableExtra<Tenant>("dataKos")
 
@@ -43,8 +49,6 @@ class TenantActivity : AppCompatActivity() {
         tvHp.setText(item!!.noHp)
         tvTggl.setText(item!!.tgglMasuk)
 
-//        Log.d("TAG", "onCreate: ${item.status}")
-//
         if (item!!.status == false) {
             tvStatus.setTextColor(ResourcesCompat.getColor(resources, R.color.colorDanger, null))
             tvStatus.setText("BELUM BAYAR")
@@ -52,6 +56,7 @@ class TenantActivity : AppCompatActivity() {
         } else {
             tvStatus.setTextColor(ResourcesCompat.getColor(resources, R.color.colorBtn, null))
             tvStatus.setText("SUDAH BAYAR")
+            btnRiwayat.visibility = View.VISIBLE
         }
 
         swipeRefresh.setOnRefreshListener {
@@ -68,6 +73,10 @@ class TenantActivity : AppCompatActivity() {
 
         btnBayar.setOnClickListener {
             addPayment()
+        }
+
+        btnRiwayat.setOnClickListener {
+            startActivity(Intent(this,HistoryActivity::class.java).putExtra("namaKos",item!!.name))
         }
     }
 
