@@ -1,0 +1,88 @@
+{
+  "Payment" : {
+    "Ari" : {
+      "1613217028868" : {
+        "date" : "13 Februari 2021",
+        "detail" : "uang kos Februari dan Maret",
+        "nama" : "Ari",
+        "nominal" : "600000"
+      }
+    }
+  },
+  "Tenant" : {
+    "Ari" : {
+      "name" : "Ari",
+      "noHp" : "082276326556",
+      "status" : true,
+      "tgglMasuk" : "03/08/2018"
+    },
+    "Farhan" : {
+      "name" : "Farhan",
+      "noHp" : "087879371537",
+      "status" : false,
+      "tgglMasuk" : "03/10/2018"
+    },
+    "Valdi" : {
+      "name" : "Valdi",
+      "noHp" : "08124851621",
+      "status" : false,
+      "tgglMasuk" : "01/01/2021"
+    }
+  },
+  "Wallet" : {
+    "All" : {
+      "2021" : {
+        "Februari" : {
+          "1613217028868" : {
+            "date" : "13 Februari 2021",
+            "detail" : "uang kos Februari dan Maret dari Ari",
+            "nominal" : "600000",
+            "tipe" : true
+          },
+          "1613220110394" : {
+            "date" : "01 Februari 2021",
+            "detail" : "uang pulsa",
+            "nominal" : "50000",
+            "tipe" : true
+          },
+          "1613289727157" : {
+            "date" : "14 Februari 2021",
+            "detail" : "isi pulsa",
+            "nominal" : "10000",
+            "tipe" : false
+          }
+        }
+      }
+    },
+    "Income" : {
+      "2021" : {
+        "Februari" : {
+          "1613217028868" : {
+            "date" : "13 Februari 2021",
+            "detail" : "uang kos Februari dan Maret dari Ari",
+            "nominal" : "600000",
+            "tipe" : true
+          },
+          "1613220110394" : {
+            "date" : "01 Februari 2021",
+            "detail" : "uang pulsa",
+            "nominal" : "50000",
+            "tipe" : true
+          }
+        }
+      }
+    },
+    "Outcome" : {
+      "2021" : {
+        "Februari" : {
+          "1613289727157" : {
+            "date" : "14 Februari 2021",
+            "detail" : "isi pulsa",
+            "nominal" : "10000",
+            "tipe" : false
+          }
+        }
+      }
+    }
+  }
+}
