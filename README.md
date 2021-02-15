@@ -9,4 +9,4 @@ You can download json file included in `json_file` folder to import it to your F
 ### Screenshots : 
 | | | | |
 |:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|
-|<img width="1604" alt="home" src="https://github.com/alfidh02/Kosku/blob/master/screenshots/Home.png">  Home | <img width="1604" alt="cost" src="https://github.com/alfidh02/Kosku/blob/master/screenshots/Cost.png"> Cost | <img width="1604" alt="report" src="https://github.com/alfidh02/Kosku/blob/master/screenshots/Report.png"> Report | <img width="1604" alt="reportlayout" src="https://github.com/alfidh02/Kosku/blob/master/screenshots/Report – 1.png"> Report Print Layout |
+|<img width="1604" alt="home" src="https://github.com/alfidh02/Kosku/blob/main/screenshots/Home.png">  Home | <img width="1604" alt="cost" src="https://github.com/alfidh02/Kosku/blob/main/screenshots/Cost.png"> Cost | <img width="1604" alt="report" src="https://github.com/alfidh02/Kosku/blob/main/screenshots/Report.png"> Report | <img width="1604" alt="reportlayout" src="https://github.com/alfidh02/Kosku/blob/main/screenshots/Report – 1.png"> Report Print Layout |
