@@ -111,7 +111,7 @@ class HomeFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
                 for (getData in dataSnapshot.children) {
                     val tenant = getData.getValue(Tenant::class.java)
-                    dataList.add(tenant!!)
+                    tenant?.let { dataList.add(it) }
                 }
 
                 rvList.adapter = HomeAdapter(dataList)

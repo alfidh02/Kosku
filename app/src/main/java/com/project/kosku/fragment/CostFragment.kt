@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.DatePicker
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -26,7 +27,9 @@ class CostFragment : Fragment(), DatePickerDialog.OnDateSetListener {
     var isFabOpen: Boolean = false
     lateinit var tNominal: String
     lateinit var tDetail: String
-    lateinit var dateTransaction: String
+    var dateTransaction: String = ""
+    lateinit var yearTransaction: String
+    lateinit var monthTransaction: String
     val timeStamp: String = System.currentTimeMillis().toString()
 
     override fun onCreateView(
@@ -45,7 +48,7 @@ class CostFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
         val adapter = TabAdapter(childFragmentManager, tabLayout.tabCount)
         adapter.addFragment(IncomeFragment(), "Pemasukan")
-        adapter.addFragment(ExpenditureFragment(), "Pengeluaran")
+        adapter.addFragment(ExpenseFragment(), "Pengeluaran")
         viewPager.adapter = adapter
         tabLayout.setupWithViewPager(viewPager)
 
@@ -100,7 +103,7 @@ class CostFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                 view.etDetail.error = "Harap isi keterangan"
                 view.etDetail.requestFocus()
             } else {
-                saveIncome(tNominal, tDetail, dateTransaction)
+                saveIncome(tNominal, tDetail, dateTransaction, yearTransaction, monthTransaction)
                 alertDialog.dismiss()
             }
         }
@@ -144,35 +147,39 @@ class CostFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                 view.etDetail.error = "Harap isi keterangan"
                 view.etDetail.requestFocus()
             } else {
-                saveOutcome(tNominal, tDetail, dateTransaction)
+                saveOutcome(tNominal, tDetail, dateTransaction, yearTransaction, monthTransaction)
                 alertDialog.dismiss()
             }
         }
     }
 
-    private fun saveIncome(tNominal: String, tDetail: String, dateTransaction: String) {
+    private fun saveIncome(
+        tNominal: String,
+        tDetail: String,
+        dateTransaction: String,
+        yearTransaction: String,
+        monthTransaction: String
+    ) {
 
         val wallet = Wallet()
+        wallet.id = timeStamp
         wallet.nominal = tNominal
         wallet.detail = tDetail
         wallet.date = dateTransaction
+        wallet.year = yearTransaction
+        wallet.month = monthTransaction
         wallet.tipe = true
 
-        var locale = Locale("id", "ID")
-
         mFirebaseDatabase.child("Income")
-            .child(Calendar.getInstance().get(Calendar.YEAR).toString())
-            .child(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale))
+            .child(this.yearTransaction)
+            .child(this.monthTransaction)
             .child(timeStamp)
             .addValueEventListener(object : ValueEventListener {
 
                 override fun onDataChange(p0: DataSnapshot) {
                     mFirebaseDatabase.child("Income")
-                        .child(Calendar.getInstance().get(Calendar.YEAR).toString())
-                        .child(
-                            Calendar.getInstance()
-                                .getDisplayName(Calendar.MONTH, Calendar.LONG, locale)
-                        ).child(timeStamp).setValue(wallet)
+                        .child(yearTransaction)
+                        .child(monthTransaction).child(timeStamp).setValue(wallet)
                     Toast.makeText(context, "Data berhasil ditambahkan!", Toast.LENGTH_SHORT).show()
                 }
 
@@ -181,45 +188,46 @@ class CostFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                 }
             })
 
-        mFirebaseDatabase.child("All").child(Calendar.getInstance().get(Calendar.YEAR).toString())
-            .child(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale))
+        mFirebaseDatabase.child("All").child(this.yearTransaction)
+            .child(this.monthTransaction)
             .child(timeStamp).addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {}
 
                 override fun onDataChange(p0: DataSnapshot) {
                     mFirebaseDatabase.child("All")
-                        .child(Calendar.getInstance().get(Calendar.YEAR).toString())
-                        .child(
-                            Calendar.getInstance()
-                                .getDisplayName(Calendar.MONTH, Calendar.LONG, locale)
-                        ).child(timeStamp).setValue(wallet)
+                        .child(yearTransaction)
+                        .child(monthTransaction).child(timeStamp).setValue(wallet)
                 }
             })
     }
 
-    private fun saveOutcome(tNominal: String, tDetail: String, dateTransaction: String) {
+    private fun saveOutcome(
+        tNominal: String,
+        tDetail: String,
+        dateTransaction: String,
+        yearTransaction: String,
+        monthTransaction: String
+    ) {
 
         val wallet = Wallet()
+        wallet.id = timeStamp
         wallet.nominal = tNominal
         wallet.detail = tDetail
         wallet.date = dateTransaction
+        wallet.year = yearTransaction
+        wallet.month = monthTransaction
         wallet.tipe = false
 
-        var locale = Locale("id", "ID")
-
         mFirebaseDatabase.child("Outcome")
-            .child(Calendar.getInstance().get(Calendar.YEAR).toString())
-            .child(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale))
+            .child(yearTransaction)
+            .child(monthTransaction)
             .child(timeStamp)
             .addValueEventListener(object : ValueEventListener {
 
                 override fun onDataChange(p0: DataSnapshot) {
                     mFirebaseDatabase.child("Outcome")
-                        .child(Calendar.getInstance().get(Calendar.YEAR).toString())
-                        .child(
-                            Calendar.getInstance()
-                                .getDisplayName(Calendar.MONTH, Calendar.LONG, locale)
-                        ).child(timeStamp).setValue(wallet)
+                        .child(yearTransaction)
+                        .child(monthTransaction).child(timeStamp).setValue(wallet)
                     Toast.makeText(context, "Data berhasil ditambahkan!", Toast.LENGTH_SHORT).show()
                 }
 
@@ -228,21 +236,15 @@ class CostFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                 }
             })
 
-        mFirebaseDatabase.child("All").child(Calendar.getInstance().get(Calendar.YEAR).toString())
-            .child(
-                Calendar.getInstance()
-                    .getDisplayName(Calendar.MONTH, Calendar.LONG, locale)
-            ).child(timeStamp)
+        mFirebaseDatabase.child("All").child(yearTransaction)
+            .child(monthTransaction).child(timeStamp)
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {}
 
                 override fun onDataChange(p0: DataSnapshot) {
                     mFirebaseDatabase.child("All")
-                        .child(Calendar.getInstance().get(Calendar.YEAR).toString())
-                        .child(
-                            Calendar.getInstance()
-                                .getDisplayName(Calendar.MONTH, Calendar.LONG, locale)
-                        ).child(timeStamp).setValue(wallet)
+                        .child(yearTransaction)
+                        .child(monthTransaction).child(timeStamp).setValue(wallet)
                 }
             })
     }
@@ -294,11 +296,14 @@ class CostFragment : Fragment(), DatePickerDialog.OnDateSetListener {
     }
 
     override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
+
         var calendar = Calendar.getInstance()
         calendar.set(p1, p2, p3)
 
         var dateFormat = SimpleDateFormat("dd MMMM yyyy")
         dateTransaction = dateFormat.format(calendar.time)
-    }
 
+        yearTransaction = SimpleDateFormat("yyyy").format(calendar.time)
+        monthTransaction = SimpleDateFormat("MMMM").format(calendar.time)
+    }
 }

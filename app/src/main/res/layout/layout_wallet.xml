@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:paddingHorizontal="20dp"
     android:paddingBottom="20dp"
     android:orientation="vertical">
@@ -46,7 +47,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="12dp"
         android:fontFamily="@font/roboto"/>
-    
+
     <Button
         android:id="@+id/btnDate"
         android:layout_width="match_parent"
