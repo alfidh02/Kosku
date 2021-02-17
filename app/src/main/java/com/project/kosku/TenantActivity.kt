@@ -3,6 +3,8 @@ package com.project.kosku
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
@@ -28,6 +30,7 @@ class TenantActivity : AppCompatActivity() {
     lateinit var pDetail: String
     val timeStamp: String = System.currentTimeMillis().toString()
     var locale = Locale("id", "ID")
+    lateinit var item : Tenant
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,20 +46,19 @@ class TenantActivity : AppCompatActivity() {
             this.window.decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
         }
 
-        val item = intent.getParcelableExtra<Tenant>("dataKos")
+        item = intent.getParcelableExtra("dataKos")!!
 
-        tvName.setText(item!!.name)
-        tvHp.setText(item!!.noHp)
-        tvTggl.setText(item!!.tgglMasuk)
+        tvName.setText(item.name)
+        tvHp.setText(item.noHp)
+        tvTggl.setText(item.tgglMasuk)
 
-        if (item!!.status == false) {
+        if (item.status == false) {
             tvStatus.setTextColor(ResourcesCompat.getColor(resources, R.color.colorDanger, null))
             tvStatus.setText("BELUM BAYAR")
             btnBayar.visibility = View.VISIBLE
         } else {
             tvStatus.setTextColor(ResourcesCompat.getColor(resources, R.color.colorBtn, null))
             tvStatus.setText("SUDAH BAYAR")
-            btnRiwayat.visibility = View.VISIBLE
         }
 
         swipeRefresh.setOnRefreshListener {
@@ -73,10 +75,6 @@ class TenantActivity : AppCompatActivity() {
 
         btnBayar.setOnClickListener {
             addPayment()
-        }
-
-        btnRiwayat.setOnClickListener {
-            startActivity(Intent(this,HistoryActivity::class.java).putExtra("namaKos",item!!.name))
         }
     }
 
@@ -227,6 +225,21 @@ class TenantActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar!!.setTitle("Detail Anak Kos")
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.tenant_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+            R.id.history -> {
+                startActivity(Intent(this,HistoryActivity::class.java).putExtra("namaKos",this.item.name))
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onSupportNavigateUp(): Boolean {
