@@ -12,9 +12,6 @@ import com.google.firebase.database.*
 import com.project.kosku.adapter.HistoryAdapter
 import com.project.kosku.model.Payment
 import kotlinx.android.synthetic.main.activity_history.*
-import java.text.NumberFormat
-import java.util.*
-import kotlin.collections.ArrayList
 
 class HistoryActivity : AppCompatActivity() {
     private var dataList = ArrayList<Payment>()
@@ -59,6 +56,12 @@ class HistoryActivity : AppCompatActivity() {
                 for (getData in dataSnapshot.children) {
                     val payment = getData.getValue(Payment::class.java)
                     dataList.add(payment!!)
+                }
+
+                if (dataList.isEmpty()) {
+                    tvNoPayment.visibility = View.VISIBLE
+                } else {
+                    tvNoPayment.visibility = View.GONE
                 }
 
                 rvHistory.adapter = HistoryAdapter(dataList)

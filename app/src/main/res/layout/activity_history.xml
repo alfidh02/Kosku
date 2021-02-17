@@ -18,6 +18,16 @@
         android:textColor="@android:color/black"
         android:layout_marginTop="24dp"/>
 
+    <TextView
+        android:id="@+id/tvNoPayment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_light"
+        android:layout_gravity="center_horizontal"
+        android:text="Belum melakukan pembayaran apapun."
+        android:visibility="gone"
+        android:layout_marginTop="24dp"/>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvHistory"
