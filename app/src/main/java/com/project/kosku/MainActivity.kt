@@ -21,28 +21,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-        )
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            this.window.decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
-            ViewCompat.setOnApplyWindowInsetsListener(
-                this.window.decorView,
-                object : OnApplyWindowInsetsListener {
-                    override fun onApplyWindowInsets(
-                        v: View,
-                        insets: WindowInsetsCompat
-                    ): WindowInsetsCompat? {
-                        v.setPadding(
-                            0,
-                            0,
-                            0,
-                            v.paddingBottom + insets.systemWindowInsetBottom - 40
-                        )
-                        return insets
-                    }
-                })
+        window.apply {
+            decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
 
 
