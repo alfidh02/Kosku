@@ -1,12 +1,11 @@
 package com.project.kosku
 
+import android.annotation.SuppressLint
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -30,7 +29,7 @@ class TenantActivity : AppCompatActivity() {
     lateinit var pDetail: String
     val timeStamp: String = System.currentTimeMillis().toString()
     var locale = Locale("id", "ID")
-    lateinit var item : Tenant
+    lateinit var item: Tenant
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -165,7 +164,8 @@ class TenantActivity : AppCompatActivity() {
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    mFirebaseDatabase.child(tvName.text.toString()).child(timeStamp).setValue(payment)
+                    mFirebaseDatabase.child(tvName.text.toString()).child(timeStamp)
+                        .setValue(payment)
                     pDialog.dismiss()
                     Toast.makeText(
                         this@TenantActivity,
@@ -191,34 +191,44 @@ class TenantActivity : AppCompatActivity() {
             ).toString()
         ).child(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale))
             .child(timeStamp).addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {}
+                override fun onCancelled(p0: DatabaseError) {}
 
-            override fun onDataChange(p0: DataSnapshot) {
-                mWalletDatabase.child("Income").child(
-                    Calendar.getInstance().get(
-                        Calendar.YEAR
-                    ).toString()
-                ).child(
-                    Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale)
-                ).child(timeStamp).setValue(wallet)
-            }
-        })
+                override fun onDataChange(p0: DataSnapshot) {
+                    mWalletDatabase.child("Income").child(
+                        Calendar.getInstance().get(
+                            Calendar.YEAR
+                        ).toString()
+                    ).child(
+                        Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale)
+                    ).child(timeStamp).setValue(wallet)
+                }
+            })
 
         mWalletDatabase.child("All").child(Calendar.getInstance().get(Calendar.YEAR).toString())
-            .child(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale)).child(timeStamp).addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {}
+            .child(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale))
+            .child(timeStamp).addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {}
 
-            override fun onDataChange(p0: DataSnapshot) {
-                mWalletDatabase.child("All").child(Calendar.getInstance().get(Calendar.YEAR).toString())
-                    .child(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, locale)).child(timeStamp).setValue(wallet)
-            }
+                override fun onDataChange(p0: DataSnapshot) {
+                    mWalletDatabase.child("All")
+                        .child(Calendar.getInstance().get(Calendar.YEAR).toString())
+                        .child(
+                            Calendar.getInstance()
+                                .getDisplayName(Calendar.MONTH, Calendar.LONG, locale)
+                        ).child(timeStamp).setValue(wallet)
+                }
 
-        })
+            })
     }
 
+    @SuppressLint("ResourceAsColor")
     private fun setToolbar() {
+        toolbar.navigationIcon?.mutate()?.let {
+            it.setTint(android.R.color.white)
+            toolbar.navigationIcon = it
+        }
         setSupportActionBar(toolbar)
-        supportActionBar!!.setTitle("Detail Anak Kos")
+        supportActionBar!!.setDisplayShowTitleEnabled(false)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
     }
 
@@ -231,7 +241,12 @@ class TenantActivity : AppCompatActivity() {
 
         when (item.itemId) {
             R.id.history -> {
-                startActivity(Intent(this,HistoryActivity::class.java).putExtra("namaKos",this.item.name))
+                startActivity(
+                    Intent(this, HistoryActivity::class.java).putExtra(
+                        "namaKos",
+                        this.item.name
+                    )
+                )
             }
         }
         return super.onOptionsItemSelected(item)

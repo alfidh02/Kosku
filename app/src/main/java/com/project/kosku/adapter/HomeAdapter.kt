@@ -29,7 +29,7 @@ class HomeAdapter(private var tenants: ArrayList<Tenant>) :
 
         holder.itemView.setOnClickListener {
             it.context.startActivity(
-                Intent(it.context, TenantActivity::class.java).putExtra("dataKos", tenant)
+                Intent(it.context, TenantActivity::class.java).putExtra(    "dataKos", tenant)
             )
         }
 
