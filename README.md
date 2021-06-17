@@ -1,5 +1,15 @@
-# Kosku
-Personal project to manage my rent house (financial, tenant, and report) system. 
+<br />
+<p align="center">
+<a href="#">
+    <img src="screenshots/Cover Kosku.png" alt="Kosku">
+</a>
+
+<h1 align="center">Kosku</h1>
+
+<p align="center">
+ Personal project to manage my rent house (financial, tenant, and report) system. 
+</p>
+</p>
 ### Feature :
 - Create Tenant and Cost data to Firebase, Read the data
 - Export to PDF option
