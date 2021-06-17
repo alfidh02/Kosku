@@ -1,8 +1,8 @@
 <br />
 <p align="center">
-<a href="#">
-    <img src="screenshots/Cover Kosku.png" alt="Kosku">
-</a>
+    <a href="#">
+        <img src="screenshots/Cover Kosku.png" alt="Kosku">
+    </a>
 
 <h1 align="center">Kosku</h1>
 
@@ -10,6 +10,7 @@
  Personal project to manage my rent house (financial, tenant, and report) system. 
 </p>
 </p>
+
 ### Feature :
 - Create Tenant and Cost data to Firebase, Read the data
 - Export to PDF option
